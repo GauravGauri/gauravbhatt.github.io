@@ -4,918 +4,50 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gaurav Bhatt — React JS Developer</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap"
-        rel="stylesheet" />
-    <style>
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        :root {
-            --bg: #0a0a0f;
-            --surface: #111118;
-            --card: #13131f;
-            --cyan: #00e5ff;
-            --purple: #7c3aed;
-            --amber: #f59e0b;
-            --text: #e2e8f0;
-            --muted: #64748b;
-            --border: rgba(255, 255, 255, 0.07);
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'Syne', sans-serif;
-            cursor: none;
-            overflow-x: hidden;
-        }
-
-        /* ── NOISE OVERLAY ── */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-            pointer-events: none;
-            z-index: 9999;
-            opacity: 0.35;
-        }
-
-        /* ── GRID BACKGROUND ── */
-        body::after {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image:
-                linear-gradient(rgba(0, 229, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
-            background-size: 60px 60px;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* ── CUSTOM CURSOR ── */
-        #cursor-dot {
-            position: fixed;
-            width: 8px;
-            height: 8px;
-            background: var(--cyan);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 99999;
-            transform: translate(-50%, -50%);
-            transition: width 0.2s, height 0.2s, background 0.2s;
-        }
-
-        #cursor-ring {
-            position: fixed;
-            width: 36px;
-            height: 36px;
-            border: 1.5px solid rgba(0, 229, 255, 0.5);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 99998;
-            transform: translate(-50%, -50%);
-            transition: transform 0.12s ease-out, width 0.2s, height 0.2s, border-color 0.2s;
-        }
-
-        body.cursor-hover #cursor-dot {
-            width: 12px;
-            height: 12px;
-            background: var(--amber);
-        }
-
-        body.cursor-hover #cursor-ring {
-            width: 52px;
-            height: 52px;
-            border-color: var(--amber);
-        }
-
-        /* ── SCROLL DOTS ── */
-        #scroll-dots {
-            position: fixed;
-            right: 32px;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            z-index: 10000;
-        }
-
-        .scroll-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            border: 1.5px solid var(--muted);
-            background: transparent;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .scroll-dot.active {
-            background: var(--cyan);
-            border-color: var(--cyan);
-            box-shadow: 0 0 8px var(--cyan);
-        }
-
-        /* ── NAV ── */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 500;
-            padding: 0 5%;
-            height: 68px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            background: rgba(10, 10, 15, 0.75);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .nav-logo {
-            font-family: 'DM Mono', monospace;
-            font-size: 1.1rem;
-            font-weight: 500;
-            color: var(--cyan);
-            letter-spacing: 0.05em;
-            text-decoration: none;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 36px;
-            list-style: none;
-        }
-
-        .nav-links a {
-            font-family: 'DM Mono', monospace;
-            font-size: 0.78rem;
-            color: var(--muted);
-            text-decoration: none;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            transition: color 0.25s;
-            position: relative;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 0;
-            height: 1px;
-            background: var(--cyan);
-            transition: width 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: var(--cyan);
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        /* ── SECTION BASE ── */
-        section {
-            position: relative;
-            z-index: 1;
-        }
-
-        .section-inner {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 100px 5%;
-        }
-
-        .section-label {
-            font-family: 'DM Mono', monospace;
-            font-size: 0.72rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--cyan);
-            margin-bottom: 12px;
-        }
-
-        .section-title {
-            font-size: clamp(2rem, 4vw, 3rem);
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 56px;
-        }
-
-        /* ── HERO ── */
-        #hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            padding-top: 68px;
-        }
-
-        .hero-inner {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 5%;
-            display: grid;
-            grid-template-columns: 1fr 420px;
-            gap: 60px;
-            align-items: center;
-            width: 100%;
-        }
-
-        .hero-tag {
-            font-family: 'DM Mono', monospace;
-            font-size: 0.8rem;
-            color: var(--muted);
-            letter-spacing: 0.1em;
-            margin-bottom: 20px;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeUp 0.6s 0.2s forwards;
-        }
-
-        .hero-name {
-            font-size: clamp(3.5rem, 8vw, 7rem);
-            font-weight: 800;
-            line-height: 0.95;
-            margin-bottom: 16px;
-        }
-
-        .hero-name .line1 {
-            display: block;
-            color: var(--text);
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeUp 0.7s 0.35s forwards;
-        }
-
-        .hero-name .line2 {
-            display: block;
-            -webkit-text-stroke: 2px var(--text);
-            color: transparent;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeUp 0.7s 0.5s forwards;
-        }
-
-        .hero-role {
-            font-family: 'DM Mono', monospace;
-            font-size: 0.95rem;
-            color: var(--amber);
-            margin-bottom: 24px;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeUp 0.6s 0.65s forwards;
-        }
-
-        .hero-bio {
-            font-size: 1rem;
-            color: var(--muted);
-            line-height: 1.75;
-            max-width: 520px;
-            margin-bottom: 40px;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeUp 0.6s 0.8s forwards;
-        }
-
-        .hero-btns {
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeUp 0.6s 0.95s forwards;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 13px 28px;
-            font-family: 'DM Mono', monospace;
-            font-size: 0.82rem;
-            letter-spacing: 0.08em;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s;
-            clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
-        }
-
-        .btn-primary {
-            background: var(--cyan);
-            color: #0a0a0f;
-        }
-
-        .btn-primary:hover {
-            background: #fff;
-            box-shadow: 0 0 30px rgba(0, 229, 255, 0.4);
-        }
-
-        .btn-outline {
-            background: transparent;
-            color: var(--text);
-            border: 1px solid var(--border);
-        }
-
-        .btn-outline:hover {
-            border-color: var(--cyan);
-            color: var(--cyan);
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.15);
-        }
-
-        /* ── HERO IMAGE ── */
-        .hero-image-wrap {
-            position: relative;
-            opacity: 0;
-            transform: scale(0.92);
-            animation: scaleIn 0.8s 0.6s forwards;
-        }
-
-        .hero-image-frame {
-            position: relative;
-            width: 340px;
-            height: 400px;
-            margin: 0 auto;
-            clip-path: polygon(20px 0%, 100% 0%, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0% 100%, 0% 20px);
-        }
-
-        .hero-image-frame::before {
-            content: '';
-            position: absolute;
-            inset: -2px;
-            background: linear-gradient(135deg, var(--cyan), var(--purple), var(--amber), var(--cyan));
-            background-size: 300% 300%;
-            animation: gradientShift 4s linear infinite;
-            clip-path: polygon(20px 0%, 100% 0%, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0% 100%, 0% 20px);
-            z-index: -1;
-        }
-
-        .hero-image-frame img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: top center;
-            display: block;
-            filter: grayscale(20%);
-            transition: filter 0.4s;
-        }
-
-        .hero-image-frame:hover img {
-            filter: grayscale(0%);
-        }
-
-        .hero-image-glow {
-            position: absolute;
-            bottom: -40px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 200px;
-            height: 80px;
-            background: radial-gradient(ellipse, rgba(0, 229, 255, 0.25), transparent 70%);
-            filter: blur(20px);
-        }
-
-        /* ── SKILLS ── */
-        #skills {
-            background: var(--surface);
-        }
-
-        .skills-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 36px;
-        }
-
-        .skill-category {
-            opacity: 0;
-            transform: translateY(24px);
-            transition: opacity 0.5s, transform 0.5s;
-        }
-
-        .skill-category.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .skill-cat-header {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-family: 'DM Mono', monospace;
-            font-size: 0.75rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--cyan);
-            background: rgba(0, 229, 255, 0.08);
-            border: 1px solid rgba(0, 229, 255, 0.2);
-            padding: 6px 14px;
-            border-radius: 4px;
-            margin-bottom: 16px;
-        }
-
-        .skill-pills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .skill-pill {
-            font-family: 'DM Mono', monospace;
-            font-size: 0.78rem;
-            padding: 7px 16px;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            color: var(--text);
-            transition: all 0.25s;
-            opacity: 0;
-            transform: translateY(10px);
-        }
-
-        .skill-pill.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .skill-pill:hover {
-            border-color: var(--cyan);
-            color: var(--cyan);
-            box-shadow: 0 0 16px rgba(0, 229, 255, 0.2);
-            transform: translateY(-2px);
-        }
-
-        /* ── EXPERIENCE ── */
-        #experience {
-            background: var(--bg);
-        }
-
-        .timeline {
-            position: relative;
-            padding-left: 40px;
-        }
-
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 7px;
-            top: 8px;
-            bottom: 8px;
-            width: 1px;
-            background: linear-gradient(to bottom, var(--cyan), var(--purple), transparent);
-        }
-
-        .timeline-item {
-            position: relative;
-            margin-bottom: 52px;
-            opacity: 0;
-            transform: translateX(-24px);
-            transition: opacity 0.5s, transform 0.5s;
-        }
-
-        .timeline-item.visible {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .timeline-dot {
-            position: absolute;
-            left: -36px;
-            top: 6px;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: var(--card);
-            border: 2px solid var(--muted);
-            transition: all 0.3s;
-        }
-
-        .timeline-item.current .timeline-dot {
-            border-color: var(--cyan);
-            background: var(--cyan);
-            box-shadow: 0 0 0 4px rgba(0, 229, 255, 0.15), 0 0 16px rgba(0, 229, 255, 0.4);
-            animation: pulse 2s infinite;
-        }
-
-        .timeline-period {
-            font-family: 'DM Mono', monospace;
-            font-size: 0.72rem;
-            color: var(--muted);
-            letter-spacing: 0.1em;
-            margin-bottom: 6px;
-        }
-
-        .timeline-role {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--text);
-            margin-bottom: 4px;
-        }
-
-        .timeline-company {
-            font-family: 'DM Mono', monospace;
-            font-size: 0.82rem;
-            color: var(--cyan);
-            margin-bottom: 14px;
-        }
-
-        .timeline-bullets {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .timeline-bullets li {
-            font-size: 0.9rem;
-            color: var(--muted);
-            line-height: 1.65;
-            padding-left: 16px;
-            position: relative;
-        }
-
-        .timeline-bullets li::before {
-            content: '▸';
-            position: absolute;
-            left: 0;
-            color: var(--purple);
-        }
-
-        /* ── PROJECTS ── */
-        #projects {
-            background: var(--surface);
-        }
-
-        .projects-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-        }
-
-        .project-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            padding: 36px 32px;
-            clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
-            position: relative;
-            overflow: hidden;
-            transition: all 0.35s;
-            opacity: 0;
-            transform: translateY(28px);
-        }
-
-        .project-card.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .project-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(0, 229, 255, 0.04), rgba(124, 58, 237, 0.04));
-            opacity: 0;
-            transition: opacity 0.35s;
-        }
-
-        .project-card:hover {
-            border-color: var(--cyan);
-            transform: translateY(-6px);
-            box-shadow: 0 20px 60px rgba(0, 229, 255, 0.1);
-        }
-
-        .project-card:hover::before {
-            opacity: 1;
-        }
-
-        .project-num {
-            font-family: 'DM Mono', monospace;
-            font-size: 0.7rem;
-            color: var(--cyan);
-            letter-spacing: 0.2em;
-            margin-bottom: 12px;
-        }
-
-        .project-name {
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin-bottom: 14px;
-            color: var(--text);
-        }
-
-        .project-desc {
-            font-size: 0.88rem;
-            color: var(--muted);
-            line-height: 1.7;
-        }
-
-        .project-corner {
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 20px;
-            height: 20px;
-            background: var(--cyan);
-            clip-path: polygon(0 0, 100% 0, 100% 100%);
-            opacity: 0.5;
-        }
-
-        /* ── EDUCATION ── */
-        #education {
-            background: var(--bg);
-        }
-
-        .edu-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-        }
-
-        .edu-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            padding: 36px 32px;
-            clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
-            transition: all 0.35s;
-            opacity: 0;
-            transform: translateY(24px);
-        }
-
-        .edu-card.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .edu-card:hover {
-            border-color: var(--purple);
-            box-shadow: 0 16px 48px rgba(124, 58, 237, 0.12);
-        }
-
-        .edu-degree {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--text);
-            margin-bottom: 8px;
-        }
-
-        .edu-uni {
-            font-family: 'DM Mono', monospace;
-            font-size: 0.8rem;
-            color: var(--cyan);
-            margin-bottom: 20px;
-        }
-
-        .edu-year {
-            font-family: 'DM Mono', monospace;
-            font-size: 0.72rem;
-            color: var(--muted);
-            letter-spacing: 0.1em;
-            margin-bottom: 12px;
-        }
-
-        .edu-percent {
-            font-family: 'DM Mono', monospace;
-            font-size: 2.8rem;
-            font-weight: 500;
-            color: var(--amber);
-            line-height: 1;
-        }
-
-        .edu-percent span {
-            font-size: 1rem;
-            color: var(--muted);
-        }
-
-        /* ── CONTACT ── */
-        #contact {
-            background: var(--surface);
-        }
-
-        .contact-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            align-items: center;
-        }
-
-        .contact-tagline {
-            font-size: clamp(1.6rem, 3vw, 2.4rem);
-            font-weight: 800;
-            line-height: 1.2;
-            margin-bottom: 16px;
-        }
-
-        .contact-tagline .accent {
-            color: var(--cyan);
-        }
-
-        .contact-sub {
-            font-size: 0.92rem;
-            color: var(--muted);
-            line-height: 1.7;
-            margin-bottom: 32px;
-        }
-
-        .contact-items {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 18px 22px;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-
-        .contact-item:hover {
-            border-color: var(--cyan);
-            transform: translateX(6px);
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.1);
-        }
-
-        .contact-icon {
-            width: 40px;
-            height: 40px;
-            background: rgba(0, 229, 255, 0.08);
-            border: 1px solid rgba(0, 229, 255, 0.2);
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            flex-shrink: 0;
-        }
-
-        .contact-info-label {
-            font-family: 'DM Mono', monospace;
-            font-size: 0.68rem;
-            color: var(--muted);
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            margin-bottom: 3px;
-        }
-
-        .contact-info-value {
-            font-size: 0.9rem;
-            color: var(--text);
-        }
-
-        /* ── FOOTER ── */
-        footer {
-            background: var(--bg);
-            border-top: 1px solid var(--border);
-            padding: 32px 5%;
-            text-align: center;
-            position: relative;
-            z-index: 1;
-        }
-
-        footer p {
-            font-family: 'DM Mono', monospace;
-            font-size: 0.75rem;
-            color: var(--muted);
-            letter-spacing: 0.08em;
-        }
-
-        footer .footer-accent {
-            color: var(--cyan);
-        }
-
-        /* ── ANIMATIONS ── */
-        @keyframes fadeUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes scaleIn {
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        @keyframes gradientShift {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                box-shadow: 0 0 0 4px rgba(0, 229, 255, 0.15), 0 0 16px rgba(0, 229, 255, 0.4);
-            }
-
-            50% {
-                box-shadow: 0 0 0 8px rgba(0, 229, 255, 0.05), 0 0 28px rgba(0, 229, 255, 0.6);
-            }
-        }
-
-        /* ── RESPONSIVE ── */
-        @media (max-width: 900px) {
-            .hero-inner {
-                grid-template-columns: 1fr;
-            }
-
-            .hero-image-wrap {
-                display: none;
-            }
-
-            .projects-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .edu-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .contact-grid {
-                grid-template-columns: 1fr;
-                gap: 40px;
-            }
-
-            .nav-links {
-                gap: 20px;
-            }
-
-            #scroll-dots {
-                display: none;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .nav-links {
-                display: none;
-            }
-
-            .hero-name {
-                font-size: 3.2rem;
-            }
-
-            .section-inner {
-                padding: 72px 5%;
-            }
-        }
-    </style>
+    <title>Gaurav Bhatt — React JS Developer &amp; QA Engineer</title>
+    <meta name="description" content="Portfolio of Gaurav Bhatt, React JS Developer &amp; QA Engineer. Specializing in SaaS development, responsive web design, and quality assurance." />
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
+
+    <!-- SCROLL PROGRESS -->
+    <div id="scroll-progress"></div>
+
+    <!-- BACKGROUND EFFECT EFFECTS -->
+    <div class="noise-overlay"></div>
+    <div class="grid-bg"></div>
+    <div class="glow-blob blob-1"></div>
+    <div class="glow-blob blob-2"></div>
+    <div class="glow-blob blob-3"></div>
 
     <!-- CURSOR -->
     <div id="cursor-dot"></div>
     <div id="cursor-ring"></div>
 
-    <!-- SCROLL DOTS -->
+    <!-- SCROLL DOTS FLOATING NAVIGATION -->
     <nav id="scroll-dots" aria-label="Section navigation">
-        <div class="scroll-dot active" data-section="hero" title="Home"></div>
-        <div class="scroll-dot" data-section="skills" title="Skills"></div>
-        <div class="scroll-dot" data-section="experience" title="Experience"></div>
-        <div class="scroll-dot" data-section="projects" title="Projects"></div>
-        <div class="scroll-dot" data-section="education" title="Education"></div>
-        <div class="scroll-dot" data-section="contact" title="Contact"></div>
+        <div class="scroll-dot active" data-section="hero" data-title="Home"></div>
+        <div class="scroll-dot" data-section="skills" data-title="Skills"></div>
+        <div class="scroll-dot" data-section="experience" data-title="Experience"></div>
+        <div class="scroll-dot" data-section="projects" data-title="Projects"></div>
+        <div class="scroll-dot" data-section="education" data-title="Education"></div>
+        <div class="scroll-dot" data-section="contact" data-title="Contact"></div>
     </nav>
 
-    <!-- NAV -->
-    <nav aria-label="Main navigation">
-        <a href="#hero" class="nav-logo">GB.DEV</a>
-        <ul class="nav-links">
+    <!-- HEADER NAVIGATION -->
+    <nav class="navbar" aria-label="Main navigation">
+        <a href="#hero" class="nav-logo">GB<span>.DEV</span></a>
+        
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        
+        <ul class="nav-links" id="nav-links">
             <li><a href="#skills">Skills</a></li>
             <li><a href="#experience">Experience</a></li>
             <li><a href="#projects">Projects</a></li>
@@ -926,18 +58,23 @@
 
     <!-- HERO -->
     <section id="hero">
-        <div class="hero-inner">
+        <div class="section-inner hero-inner">
             <div class="hero-content">
+                <div class="hero-status">
+                    <span class="status-dot"></span>
+                    <span>Available for Opportunities</span>
+                </div>
                 <p class="hero-tag">// frontend developer · react specialist · qa engineer</p>
                 <h1 class="hero-name">
                     <span class="line1">GAURAV</span>
                     <span class="line2">BHATT</span>
                 </h1>
-                <p class="hero-role">QA Associate @ Eunix Tech Pvt. Ltd.</p>
+                <p class="hero-role">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--amber); margin-right: 4px;"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                    QA Associate @ Eunix Tech Pvt. Ltd.
+                </p>
                 <p class="hero-bio">
-                    Passionate React JS developer with hands-on experience building scalable SaaS platforms,
-                    integrating payment gateways, and delivering polished user interfaces. Currently expanding
-                    expertise in QA — bridging the gap between development and quality assurance.
+                    Detail-oriented QA Associate and former React JS Developer who blends development expertise with quality assurance. Experienced in building responsive SaaS frontends, conducting rigorous manual tests, and writing automated test scripts with Cypress and Playwright. Dedicated to bridging the gap between code quality and flawless user experience.
                 </p>
                 <div class="hero-btns">
                     <a href="#projects" class="btn btn-primary">View Projects</a>
@@ -946,7 +83,9 @@
             </div>
             <div class="hero-image-wrap">
                 <div class="hero-image-frame">
-                    <img src="./img/Gaurav.jpg" alt="Gaurav Bhatt — React JS Developer" />
+                    <div class="hero-image-frame-inner">
+                        <img src="./img/Gaurav.jpg" alt="Gaurav Bhatt — React JS Developer" />
+                    </div>
                 </div>
                 <div class="hero-image-glow"></div>
             </div>
@@ -961,7 +100,10 @@
             <div class="skills-grid">
 
                 <div class="skill-category">
-                    <div class="skill-cat-header">💻 Programming Languages</div>
+                    <div class="skill-cat-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--cyan);"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                        Programming Languages
+                    </div>
                     <div class="skill-pills">
                         <span class="skill-pill">C Language</span>
                         <span class="skill-pill">Core Java</span>
@@ -970,7 +112,10 @@
                 </div>
 
                 <div class="skill-category">
-                    <div class="skill-cat-header">🌐 Web Technologies</div>
+                    <div class="skill-cat-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--cyan);"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                        Web Technologies
+                    </div>
                     <div class="skill-pills">
                         <span class="skill-pill">HTML</span>
                         <span class="skill-pill">CSS</span>
@@ -981,7 +126,10 @@
                 </div>
 
                 <div class="skill-category">
-                    <div class="skill-cat-header">⚛️ Frameworks &amp; Libraries</div>
+                    <div class="skill-cat-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--cyan);"><polygon points="12 2 2 7 12 12 22 7 12 22 2 17 12 12"/><line x1="2" y1="17" x2="12" y2="22"/><line x1="12" y1="22" x2="22" y2="17"/><line x1="2" y1="12" x2="12" y2="17"/><line x1="12" y1="17" x2="22" y2="12"/></svg>
+                        Frameworks &amp; Libraries
+                    </div>
                     <div class="skill-pills">
                         <span class="skill-pill">React JS</span>
                         <span class="skill-pill">Node JS</span>
@@ -989,7 +137,10 @@
                 </div>
 
                 <div class="skill-category">
-                    <div class="skill-cat-header">🧪 Testing</div>
+                    <div class="skill-cat-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--cyan);"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+                        Testing
+                    </div>
                     <div class="skill-pills">
                         <span class="skill-pill">Cypress</span>
                         <span class="skill-pill">Playwright</span>
@@ -999,7 +150,10 @@
                 </div>
 
                 <div class="skill-category">
-                    <div class="skill-cat-header">🤖 AI-Assisted Dev Tools</div>
+                    <div class="skill-cat-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--cyan);"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16.01"/><line x1="16" y1="16" x2="16" y2="16.01"/></svg>
+                        AI-Assisted Dev Tools
+                    </div>
                     <div class="skill-pills">
                         <span class="skill-pill">ChatGPT</span>
                         <span class="skill-pill">Gemini</span>
@@ -1092,27 +246,49 @@
             <div class="projects-grid">
 
                 <div class="project-card">
-                    <div class="project-corner"></div>
-                    <p class="project-num">PROJECT_01</p>
-                    <h3 class="project-name">Softrails</h3>
-                    <p class="project-desc">
-                        Live SaaS product developed for businesses to manage essential operations through integrated
-                        modules such as CRM, LMS, CMS, HRMS, and more. The project involved building a highly modular,
-                        responsive, and scalable web application using modern front-end technologies including React JS,
-                        JWT authentication, and PhonePe payment gateway integration.
-                    </p>
+                    <div>
+                        <p class="project-num">PROJECT_01</p>
+                        <h3 class="project-name">Softrails</h3>
+                        <p class="project-desc">
+                            Live SaaS product developed for businesses to manage essential operations through integrated
+                            modules such as CRM, LMS, CMS, HRMS, and more. The project involved building a highly modular,
+                            responsive, and scalable web application using modern front-end technologies including React JS,
+                            JWT authentication, and PhonePe payment gateway integration.
+                        </p>
+                    </div>
+                    <div class="project-card-footer">
+                        <div class="project-tags">
+                            <span class="project-tag">React JS</span>
+                            <span class="project-tag">SaaS</span>
+                            <span class="project-tag">PhonePe SDK</span>
+                        </div>
+                        <a href="#" class="project-link" aria-label="View Softrails Details">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+                        </a>
+                    </div>
                 </div>
 
                 <div class="project-card">
-                    <div class="project-corner"></div>
-                    <p class="project-num">PROJECT_02</p>
-                    <h3 class="project-name">Intranet</h3>
-                    <p class="project-desc">
-                        Internal web application developed for company use, focused on Leave Management functionality.
-                        The system allows employees to apply for leaves, view leave history, and for admins to manage
-                        approvals and leave records — streamlining internal HR workflows with a clean, intuitive
-                        interface.
-                    </p>
+                    <div>
+                        <p class="project-num">PROJECT_02</p>
+                        <h3 class="project-name">Intranet</h3>
+                        <p class="project-desc">
+                            Internal web application developed for company use, focused on Leave Management functionality.
+                            The system allows employees to apply for leaves, view leave history, and for admins to manage
+                            approvals and leave records — streamlining internal HR workflows with a clean, intuitive
+                            interface.
+                        </p>
+                    </div>
+                    <div class="project-card-footer">
+                        <div class="project-tags">
+                            <span class="project-tag">HTML5</span>
+                            <span class="project-tag">JavaScript</span>
+                            <span class="project-tag">HR Dashboard</span>
+                        </div>
+                        <a href="#" class="project-link" aria-label="View Intranet Details">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+                        </a>
+                    </div>
                 </div>
 
             </div>
@@ -1127,17 +303,27 @@
             <div class="edu-grid">
 
                 <div class="edu-card">
-                    <p class="edu-year">2023 – 2025</p>
-                    <h3 class="edu-degree">Master of Computer Application</h3>
-                    <p class="edu-uni">Graphic Era University</p>
-                    <div class="edu-percent">84<span>%</span></div>
+                    <div class="edu-info">
+                        <p class="edu-year">2023 – 2025</p>
+                        <h3 class="edu-degree">Master of Computer Application</h3>
+                        <p class="edu-uni">Graphic Era University</p>
+                    </div>
+                    <div class="edu-metric">
+                        <div class="edu-percent">84<span>%</span></div>
+                        <div class="edu-label">Score</div>
+                    </div>
                 </div>
 
                 <div class="edu-card">
-                    <p class="edu-year">2020 – 2023</p>
-                    <h3 class="edu-degree">Bachelor of Computer Application</h3>
-                    <p class="edu-uni">Graphic Era University</p>
-                    <div class="edu-percent">79.4<span>%</span></div>
+                    <div class="edu-info">
+                        <p class="edu-year">2020 – 2023</p>
+                        <h3 class="edu-degree">Bachelor of Computer Application</h3>
+                        <p class="edu-uni">Graphic Era University</p>
+                    </div>
+                    <div class="edu-metric">
+                        <div class="edu-percent">79.4<span>%</span></div>
+                        <div class="edu-label">Score</div>
+                    </div>
                 </div>
 
             </div>
@@ -1163,23 +349,29 @@
 
                 <div class="contact-items">
                     <a href="mailto:bhattg439@gmail.com" class="contact-item">
-                        <div class="contact-icon">✉</div>
-                        <div>
+                        <div class="contact-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                        </div>
+                        <div class="contact-info">
                             <p class="contact-info-label">Email</p>
                             <p class="contact-info-value">bhattg439@gmail.com</p>
                         </div>
                     </a>
                     <a href="tel:+919058085467" class="contact-item">
-                        <div class="contact-icon">📞</div>
-                        <div>
+                        <div class="contact-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        </div>
+                        <div class="contact-info">
                             <p class="contact-info-label">Phone</p>
                             <p class="contact-info-value">+91 9058085467</p>
                         </div>
                     </a>
                     <a href="https://linkedin.com/in/gauravbhatt" target="_blank" rel="noopener noreferrer"
                         class="contact-item">
-                        <div class="contact-icon">in</div>
-                        <div>
+                        <div class="contact-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                        </div>
+                        <div class="contact-info">
                             <p class="contact-info-label">LinkedIn</p>
                             <p class="contact-info-value">linkedin.com/in/gauravbhatt</p>
                         </div>
@@ -1193,105 +385,12 @@
     <!-- FOOTER -->
     <footer>
         <p>
-            &copy; 2025 <span class="footer-accent">Gaurav Bhatt</span> — Crafted with care &amp; clean code.
+            &copy; 2026 <span class="footer-accent">Gaurav Bhatt</span> — Crafted with care &amp; clean code.
         </p>
     </footer>
 
-    <script>
-        // ── CUSTOM CURSOR ──
-        const dot = document.getElementById('cursor-dot');
-        const ring = document.getElementById('cursor-ring');
-        let ringX = 0, ringY = 0, mouseX = 0, mouseY = 0;
-
-        document.addEventListener('mousemove', e => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-            dot.style.left = mouseX + 'px';
-            dot.style.top = mouseY + 'px';
-        });
-
-        function animateRing() {
-            ringX += (mouseX - ringX) * 0.12;
-            ringY += (mouseY - ringY) * 0.12;
-            ring.style.left = ringX + 'px';
-            ring.style.top = ringY + 'px';
-            requestAnimationFrame(animateRing);
-        }
-        animateRing();
-
-        const interactives = document.querySelectorAll('a, button, .skill-pill, .project-card, .edu-card, .contact-item, .scroll-dot');
-        interactives.forEach(el => {
-            el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
-            el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
-        });
-
-        // ── SCROLL DOTS ──
-        const sections = ['hero', 'skills', 'experience', 'projects', 'education', 'contact'];
-        const dots = document.querySelectorAll('#scroll-dots .scroll-dot');
-
-        dots.forEach((dot, i) => {
-            dot.addEventListener('click', () => {
-                document.getElementById(sections[i]).scrollIntoView({ behavior: 'smooth' });
-            });
-        });
-
-        const sectionObserver = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const idx = sections.indexOf(entry.target.id);
-                    if (idx !== -1) {
-                        dots.forEach(d => d.classList.remove('active'));
-                        dots[idx].classList.add('active');
-                    }
-                }
-            });
-        }, { threshold: 0.4 });
-
-        sections.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) sectionObserver.observe(el);
-        });
-
-        // ── SCROLL ANIMATIONS ──
-        const animObserver = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.12 });
-
-        // Skill categories
-        document.querySelectorAll('.skill-category').forEach((el, i) => {
-            el.style.transitionDelay = (i * 0.1) + 's';
-            animObserver.observe(el);
-        });
-
-        // Skill pills — staggered
-        document.querySelectorAll('.skill-pill').forEach((pill, i) => {
-            pill.style.transitionDelay = (i * 0.04) + 's';
-            pill.style.transition = 'opacity 0.4s, transform 0.4s, border-color 0.25s, color 0.25s, box-shadow 0.25s';
-            animObserver.observe(pill);
-        });
-
-        // Timeline items
-        document.querySelectorAll('.timeline-item').forEach((el, i) => {
-            el.style.transitionDelay = (i * 0.12) + 's';
-            animObserver.observe(el);
-        });
-
-        // Project cards
-        document.querySelectorAll('.project-card').forEach((el, i) => {
-            el.style.transitionDelay = (i * 0.15) + 's';
-            animObserver.observe(el);
-        });
-
-        // Education cards
-        document.querySelectorAll('.edu-card').forEach((el, i) => {
-            el.style.transitionDelay = (i * 0.15) + 's';
-            animObserver.observe(el);
-        });
-    </script>
+    <!-- JavaScript -->
+    <script src="script.js"></script>
 </body>
 
 </html>
